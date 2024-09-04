@@ -1,0 +1,53 @@
+name: Deploy Python Azure Function to Azure Function App
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  AZURE_FUNCTIONAPP_NEW_NAME: 'myNewFunctionApp' # The new feature function app name
+  AZURE_FUNCTIONAPP_LEGACY_NAME: 'myLegacyFunctionApp' # The legacy feature function app name
+  AZURE_FUNCTIONAPP_PACKAGE_PATH_NEW: './new-feature-function' # Path to the new function code
+  AZURE_FUNCTIONAPP_PACKAGE_PATH_LEGACY: './legacy-feature-function' # Path to the legacy function code
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    environment: dev
+
+    steps:
+    - name: 'Checkout GitHub Action'
+      uses: actions/checkout@v4
+     
+    - name: Login to Azure
+      uses: azure/login@v2
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Set up Python Environment
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
+    - name: 'Run Azure Functions Action - New Feature Function'
+      uses: Azure/functions-action@v1
+      id: new-function
+      with:
+        app-name: ${{ env.AZURE_FUNCTIONAPP_NEW_NAME }}
+        package: '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH_NEW }}'
+        publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_NEW_PUBLISH_PROFILE }}
+
+    - name: 'Run Azure Functions Action - Legacy Feature Function'
+      uses: Azure/functions-action@v1
+      id: legacy-function
+      with:
+        app-name: ${{ env.AZURE_FUNCTIONAPP_LEGACY_NAME }}
+        package: '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH_LEGACY }}'
+        publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_LEGACY_PUBLISH_PROFILE }}
+
+    - name: Set Azure Function App Environment Variables
+      run: |
+        az functionapp config appsettings set --resource-group <your-resource-group> --name ${{ env.AZURE_FUNCTIONAPP_NEW_NAME }} --settings "AzureWebJobsStorage=${{ secrets.AZURE_WEBJOBS_STORAGE }}" "ServiceBusConnectionString=${{ secrets.ServiceBusConnectionString }}" "CosmosDBConnectionString=${{ secrets.CosmosDBConnectionString }}" "FUNCTIONS_WORKER_RUNTIME=python"
+        az functionapp config appsettings set --resource-group <your-resource-group> --name ${{ env.AZURE_FUNCTIONAPP_LEGACY_NAME }} --settings "AzureWebJobsStorage=${{ secrets.AZURE_WEBJOBS_STORAGE }}" "ServiceBusConnectionString=${{ secrets.ServiceBusConnectionString }}" "FUNCTIONS_WORKER_RUNTIME=python"
