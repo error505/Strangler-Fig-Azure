@@ -38,6 +38,35 @@ The **Strangler Fig Pattern** is a migration strategy that allows you to gradual
    - Navigate to the `/ExtractedFunction` folder.
    - Run the GitHub Action to deploy the new Azure Function.
 
+### Example APIM Policy:
+``` xml
+xml
+Copy code
+<policies>
+    <inbound>
+        <base />
+        <!-- Route to Legacy Function for GET requests -->
+        <choose>
+            <when condition="@(context.Request.Method == "GET")">
+                <set-backend-service base-url="https://<your-legacy-function-app-name>.azurewebsites.net/api/legacy-feature-function" />
+            </when>
+            <!-- Route to New Feature Function for POST requests -->
+            <when condition="@(context.Request.Method == "POST")">
+                <set-backend-service base-url="https://<your-new-function-app-name>.azurewebsites.net/api/new-feature-function" />
+            </when>
+        </choose>
+    </inbound>
+    <backend>
+        <base />
+    </backend>
+    <outbound>
+        <base />
+    </outbound>
+    <on-error>
+        <base />
+    </on-error>
+</policies>
+```
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
