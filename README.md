@@ -10,7 +10,7 @@ This repository demonstrates how to implement the **Strangler Fig Pattern** usin
 
 - **`/infrastructure`**: Contains the Bicep template for deploying Azure resources and the GitHub Action for automating the deployment.
 - **`/legacy-app-service`**: Contains the Python code for the legacy monolithic application and a GitHub Action to deploy it to Azure App Service.
-- **`/new-feature-function`**: Contains the Python code for the new Azure Function that replaces part of the legacy functionality and a GitHub Action to deploy it.
+- **`/ExtractedFunction`**: Contains the Python code for the new Azure Function that replaces part of the legacy functionality and a GitHub Action to deploy it.
 
 ## 📝 Explanation of the Strangler Fig Pattern
 
@@ -35,7 +35,7 @@ The **Strangler Fig Pattern** is a migration strategy that allows you to gradual
    - Run the GitHub Action to deploy the Python app to Azure App Service.
 
 3. **Deploy the New Feature Function**:
-   - Navigate to the `/new-feature-function` folder.
+   - Navigate to the `/ExtractedFunction` folder.
    - Run the GitHub Action to deploy the new Azure Function.
 
 ## 📄 License
