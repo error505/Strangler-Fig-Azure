@@ -40,8 +40,6 @@ The **Strangler Fig Pattern** is a migration strategy that allows you to gradual
 
 ### Example APIM Policy:
 ``` xml
-xml
-Copy code
 <policies>
     <inbound>
         <base />
