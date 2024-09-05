@@ -4,7 +4,7 @@ This repository demonstrates how to implement the **Strangler Fig Pattern** usin
 
 ## 🏗️ Architecture Overview
 
-![image](https://github.com/user-attachments/assets/86cacc94-eb30-4737-b2b2-ca38f514c89a)
+![image](https://github.com/user-attachments/assets/5bac1ba3-47fc-4ca0-a435-d6f1c42fa7ee)
 
 
 ```mermaid
